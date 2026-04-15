@@ -116,7 +116,8 @@ pacstrap -K /mnt \
     networkmanager \
     git \
     sudo \
-    neovim
+    neovim \
+    zsh
 
 info "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -231,7 +232,7 @@ Exec = /usr/bin/mkinitcpio -P
 EOF
 
 # User (password set interactively outside chroot)
-useradd -mG wheel,audio,video,storage,optical,input "$USERNAME"
+useradd -mG wheel,audio,video,storage,optical,input -s /usr/bin/zsh "$USERNAME"
 
 # Sudo for wheel group
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
