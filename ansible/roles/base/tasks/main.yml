@@ -1,0 +1,51 @@
+---
+# Role: base
+# Installs core pacman packages and configures fundamental system settings.
+
+- name: Install pacman packages
+  become: true
+  community.general.pacman:
+    name: "{{ pacman_packages }}"
+    state: present
+
+- name: Set hostname
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ hostname }}"
+
+- name: Set /etc/hosts entry for hostname
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1\t{{ hostname }}"
+
+- name: Set timezone
+  become: true
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+- name: Set locale in /etc/locale.conf
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/locale.conf
+    content: "LANG={{ locale }}\n"
+    mode: '0644'
+
+- name: Enable locale in /etc/locale.gen
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/locale.gen
+    regexp: "^#?{{ locale | regex_escape }}"
+    line: "{{ locale }} UTF-8"
+
+- name: Generate locales
+  become: true
+  ansible.builtin.command: locale-gen
+  changed_when: false
+
+- name: Set default shell to zsh for current user
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /usr/bin/zsh

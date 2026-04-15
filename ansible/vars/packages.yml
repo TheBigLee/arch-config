@@ -1,0 +1,75 @@
+---
+# System packages managed by pacman
+# Edit these lists to match your desired system state.
+
+pacman_packages:
+  # Base system
+  - base-devel
+  - linux-headers
+  - git
+  - curl
+  - wget
+  - man-db
+  - man-pages
+
+  # Shell & terminal
+  - zsh
+  - tmux
+  - starship
+
+  # Editors
+  - neovim
+
+  # CLI tools
+  - fzf
+  - ripgrep
+  - fd
+  - bat
+  - eza
+  - jq
+  - htop
+  - bottom
+  - rsync
+  - unzip
+  - zip
+
+  # Networking
+  - networkmanager
+  - openssh
+
+  # Fonts
+  - ttf-jetbrains-mono-nerd
+  - noto-fonts
+  - noto-fonts-emoji
+
+  # Development
+  - python
+  - python-pip
+  - nodejs
+  - npm
+  - go
+  - rustup
+
+  # Security
+  - gnupg
+  - pass
+
+  # Misc
+  - ansible
+  - chezmoi
+
+aur_packages:
+  # Add AUR packages here (installed via paru)
+  # - paru           # AUR helper itself (bootstrapped separately)
+  # - 1password-cli
+  # - visual-studio-code-bin
+
+systemd_services_enable:
+  - NetworkManager
+  - sshd
+
+systemd_services_disable: []
+
+locale: en_US.UTF-8
+timezone: America/New_York   # Change to your timezone
+hostname: arch               # Change to your hostname

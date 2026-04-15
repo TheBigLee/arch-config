@@ -1,0 +1,17 @@
+---
+# Role: aur
+# Installs AUR packages via paru.
+# Note: paru must already be installed (handled by install.sh bootstrap).
+
+- name: Ensure paru is available
+  ansible.builtin.command: which paru
+  register: paru_check
+  changed_when: false
+  failed_when: paru_check.rc != 0
+
+- name: Install AUR packages via paru
+  when: aur_packages | length > 0
+  ansible.builtin.command:
+    argv: "{{ ['paru', '-S', '--needed', '--noconfirm'] + aur_packages }}"
+  register: paru_result
+  changed_when: "'installing' in paru_result.stdout | lower"

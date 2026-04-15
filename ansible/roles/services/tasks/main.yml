@@ -1,0 +1,20 @@
+---
+# Role: services
+# Manages systemd service state.
+
+- name: Enable and start systemd services
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop: "{{ systemd_services_enable }}"
+
+- name: Disable systemd services
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  loop: "{{ systemd_services_disable }}"
+  when: systemd_services_disable | length > 0

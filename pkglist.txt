@@ -1,0 +1,4 @@
+# Explicit pacman packages — regenerated automatically by pacman hook
+# Restore: pacman -S --needed - < pkglist.txt
+#
+# To regenerate manually: pacman -Qqe > pkglist.txt

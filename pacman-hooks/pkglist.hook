@@ -1,0 +1,12 @@
+[Trigger]
+Operation = Install
+Operation = Remove
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+When = PostTransaction
+Exec = /bin/sh -c 'pacman -Qqe > /home/YOUR_USERNAME/dotfiles/pkglist.txt; pacman -Qqm > /home/YOUR_USERNAME/dotfiles/aur-pkglist.txt'
+Description = Updating package lists in dotfiles...
+NeedsTargets

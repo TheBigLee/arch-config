@@ -1,0 +1,20 @@
+# chezmoi machine-specific configuration template
+# This file is a Go template. {{ .chezmoi.hostname }} etc. are populated at apply time.
+# See: https://www.chezmoi.io/reference/templates/
+
+[data]
+    hostname = {{ .chezmoi.hostname | quote }}
+    username = {{ .chezmoi.username | quote }}
+
+{{- if eq .chezmoi.hostname "workstation" }}
+    # Desktop/workstation-specific overrides
+    machine_type = "desktop"
+    gui = true
+{{- else if eq .chezmoi.hostname "laptop" }}
+    # Laptop-specific overrides
+    machine_type = "laptop"
+    gui = true
+{{- else }}
+    machine_type = "server"
+    gui = false
+{{- end }}

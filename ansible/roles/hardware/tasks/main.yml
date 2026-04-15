@@ -1,0 +1,84 @@
+---
+# Role: hardware
+# Hardware-specific configuration: CPU microcode, GPU drivers, audio, etc.
+# Conditionally applies config based on detected hardware.
+
+- name: Detect CPU vendor
+  ansible.builtin.shell: |
+    grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}'
+  register: cpu_vendor
+  changed_when: false
+
+- name: Install Intel microcode
+  become: true
+  community.general.pacman:
+    name: intel-ucode
+    state: present
+  when: cpu_vendor.stdout == "GenuineIntel"
+
+- name: Install AMD microcode
+  become: true
+  community.general.pacman:
+    name: amd-ucode
+    state: present
+  when: cpu_vendor.stdout == "AuthenticAMD"
+
+- name: Detect GPU vendor
+  ansible.builtin.shell: |
+    lspci | grep -i 'vga\|3d\|display' | head -1
+  register: gpu_info
+  changed_when: false
+
+- name: Install NVIDIA open drivers
+  become: true
+  community.general.pacman:
+    name:
+      - nvidia-open
+      - nvidia-utils
+      - lib32-nvidia-utils
+    state: present
+  when: "'NVIDIA' in gpu_info.stdout"
+
+- name: Install AMD GPU drivers
+  become: true
+  community.general.pacman:
+    name:
+      - mesa
+      - lib32-mesa
+      - vulkan-radeon
+      - lib32-vulkan-radeon
+    state: present
+  when: "'AMD' in gpu_info.stdout or 'Radeon' in gpu_info.stdout"
+
+- name: Install Intel GPU drivers
+  become: true
+  community.general.pacman:
+    name:
+      - mesa
+      - lib32-mesa
+      - vulkan-intel
+      - lib32-vulkan-intel
+    state: present
+  when: "'Intel' in gpu_info.stdout"
+
+- name: Install PipeWire audio stack
+  become: true
+  community.general.pacman:
+    name:
+      - pipewire
+      - pipewire-alsa
+      - pipewire-pulse
+      - pipewire-jack
+      - wireplumber
+    state: present
+
+- name: Enable PipeWire for current user (user-level service)
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+    scope: user
+  loop:
+    - pipewire
+    - pipewire-pulse
+    - wireplumber

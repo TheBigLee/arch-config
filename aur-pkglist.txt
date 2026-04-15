@@ -1,0 +1,4 @@
+# AUR packages — regenerated automatically by pacman hook
+# Restore: paru -S --needed - < aur-pkglist.txt
+#
+# To regenerate manually: pacman -Qqm > aur-pkglist.txt
