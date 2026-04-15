@@ -170,7 +170,7 @@ printf '\n127.0.1.1\t%s\n' "$HOSTNAME" >> /etc/hosts
 # rd.luks.name=<uuid>=<name> identifies the device and sets the mapper name
 mkdir -p /etc/kernel
 cat > /etc/kernel/cmdline << EOF
-rd.luks.name=${LUKS_UUID}=${LUKS_MAPPER} root=/dev/${LVM_VG}/${LVM_ROOT_LV} rw quiet loglevel=3
+rd.luks.name=${LUKS_UUID}=${LUKS_MAPPER} root=/dev/mapper/${LVM_VG}-${LVM_ROOT_LV} rw quiet loglevel=3
 EOF
 
 # mkinitcpio hooks: systemd base, sd-encrypt unlocks LUKS, lvm2 provides binaries
