@@ -30,7 +30,7 @@
 #       mkinitcpio with encrypt + lvm2 hooks, UKI output to /efi/EFI/Linux/
 #       kernel cmdline written to /etc/kernel/cmdline (embedded in UKI)
 #       efibootmgr UEFI boot entry pointing directly to the UKI (no bootloader)
-#       sbctl installed (Secure Boot key enrollment handled later by Ansible)
+#       sbctl installed by Ansible post-boot (installing here breaks mkinitcpio — hook exits 1 without keys)
 set -euo pipefail
 
 # ==============================================================================
@@ -116,8 +116,7 @@ pacstrap -K /mnt \
     networkmanager \
     git \
     sudo \
-    neovim \
-    sbctl
+    neovim
 
 info "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -148,6 +147,7 @@ EFI_PART_NUM="${10}"
 DOTFILES_REPO="${11}"
 
 set -euo pipefail
+trap 'echo "[ERROR] chroot script failed at line $LINENO (exit $?)" >&2' ERR
 
 # Timezone & hardware clock
 ln -sf "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
