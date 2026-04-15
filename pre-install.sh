@@ -163,14 +163,15 @@ echo "$HOSTNAME" > /etc/hostname
 printf '\n127.0.1.1\t%s\n' "$HOSTNAME" >> /etc/hosts
 
 # Kernel cmdline — embedded into the UKI by mkinitcpio
-# cryptdevice unlocks LUKS, then LVM activates and root LV is used as /
+# rd.luks.name=<uuid>=<name> identifies the device and sets the mapper name
 mkdir -p /etc/kernel
 cat > /etc/kernel/cmdline << EOF
-cryptdevice=UUID=${LUKS_UUID}:${LUKS_MAPPER} root=/dev/${LVM_VG}/${LVM_ROOT_LV} rw quiet loglevel=3
+rd.luks.name=${LUKS_UUID}=${LUKS_MAPPER} root=/dev/${LVM_VG}/${LVM_ROOT_LV} rw quiet loglevel=3
 EOF
 
-# mkinitcpio hooks: encrypt unlocks LUKS, lvm2 activates the volume group
-sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block encrypt lvm2 filesystems fsck)/' \
+# mkinitcpio hooks: systemd base, sd-encrypt unlocks LUKS, lvm2 provides binaries
+# (systemd activates the volume group automatically via udev rules)
+sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 filesystems fsck)/' \
     /etc/mkinitcpio.conf
 
 # Configure mkinitcpio preset to produce Unified Kernel Images (UKIs)

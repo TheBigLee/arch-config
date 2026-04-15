@@ -58,7 +58,7 @@ bash pre-install.sh
 What it does:
 - `pacstrap` — base, linux, lvm2, efibootmgr, sbctl
 - `mkinitcpio` — `encrypt` + `lvm2` hooks, UKI output to `/efi/EFI/Linux/`
-- `/etc/kernel/cmdline` — `cryptdevice=UUID:cryptroot root=/dev/vg0/root`
+- `/etc/kernel/cmdline` — `rd.luks.name=<uuid>=cryptroot root=/dev/vg0/root`
 - `efibootmgr` — UEFI boot entries pointing directly to the UKIs (no bootloader)
 - Creates user, enables NetworkManager, clones this repo
 
