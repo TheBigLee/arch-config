@@ -158,6 +158,9 @@ sed -i "s/^#${LOCALE} UTF-8/${LOCALE} UTF-8/" /etc/locale.gen
 locale-gen
 echo "LANG=${LOCALE}" > /etc/locale.conf
 
+# Virtual console keymap
+echo "KEYMAP=de_CH-latin1" > /etc/vconsole.conf
+
 # Hostname
 echo "$HOSTNAME" > /etc/hostname
 printf '\n127.0.1.1\t%s\n' "$HOSTNAME" >> /etc/hosts
