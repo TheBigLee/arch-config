@@ -49,7 +49,7 @@ mount /dev/<efi-part> /mnt/efi
 Then run the pre-install script:
 
 ```bash
-curl -O https://raw.githubusercontent.com/YOUR_USERNAME/dotfiles/main/pre-install.sh
+curl -O https://raw.githubusercontent.com/TheBigLee/dotfiles/main/pre-install.sh
 # Edit the variables at the top (LUKS_PART, EFI_PART, LVM_VG, HOSTNAME, USERNAME, ...)
 vim pre-install.sh
 bash pre-install.sh

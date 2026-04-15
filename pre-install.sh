@@ -57,7 +57,7 @@ TIMEZONE="${TIMEZONE:-Europe/Zurich}"
 LOCALE="${LOCALE:-en_US.UTF-8}"
 
 # Dotfiles repo — cloned for the new user so install.sh is ready after reboot
-DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/YOUR_USERNAME/dotfiles.git}"
+DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/TheBigLee/arch-config.git}"
 
 # ==============================================================================
 
