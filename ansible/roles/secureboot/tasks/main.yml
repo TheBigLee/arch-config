@@ -1,0 +1,83 @@
+---
+# Role: secureboot
+# Enrolls custom Secure Boot keys with sbctl and signs the UKI(s).
+#
+# Prerequisites (done by pre-install.sh):
+#   - sbctl is installed
+#   - UKIs exist at /efi/EFI/Linux/*.efi
+#
+# After this role runs:
+#   - Go into UEFI firmware setup and ENABLE Secure Boot
+#   - The system will only boot binaries signed with your keys
+
+- name: Ensure sbctl is installed
+  become: true
+  community.general.pacman:
+    name: sbctl
+    state: present
+
+- name: Check if Secure Boot keys already exist
+  ansible.builtin.stat:
+    path: /usr/share/secureboot/keys/db/db.key
+  register: sb_keys
+
+- name: Create Secure Boot keys
+  become: true
+  ansible.builtin.command: sbctl create-keys
+  when: not sb_keys.stat.exists
+  changed_when: true
+
+# --microsoft enrolls the Microsoft 3rd-party UEFI CA alongside your own keys.
+# This keeps hardware firmware (NIC, GPU option ROMs, etc.) working.
+# Omit --microsoft only if you are certain your hardware needs no Microsoft-signed firmware.
+- name: Enroll Secure Boot keys (with Microsoft CA for hardware compatibility)
+  become: true
+  ansible.builtin.command: sbctl enroll-keys --microsoft
+  register: enroll_result
+  # sbctl exits non-zero if keys are already enrolled — treat as OK
+  failed_when:
+    - enroll_result.rc != 0
+    - "'already enrolled' not in enroll_result.stderr"
+  changed_when: enroll_result.rc == 0
+
+- name: Find UKIs to sign
+  ansible.builtin.find:
+    paths: /efi/EFI/Linux
+    patterns: "*.efi"
+  register: uki_files
+
+- name: Sign UKIs with sbctl
+  become: true
+  ansible.builtin.command: "sbctl sign --save {{ item.path }}"
+  loop: "{{ uki_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  changed_when: true
+
+# --save registers the path so sbctl re-signs it automatically after
+# mkinitcpio rebuilds the UKI (via sbctl's own pacman hook).
+- name: Verify all registered files are signed
+  become: true
+  ansible.builtin.command: sbctl verify
+  register: verify_result
+  changed_when: false
+  failed_when:
+    - verify_result.rc != 0
+
+- name: Show sbctl verify output
+  ansible.builtin.debug:
+    msg: "{{ verify_result.stdout_lines }}"
+
+- name: Remind user to enable Secure Boot in firmware
+  ansible.builtin.debug:
+    msg: |
+      ============================================================
+       Secure Boot keys enrolled and UKIs signed.
+
+       NEXT STEP: Reboot into your UEFI firmware setup and
+       ENABLE Secure Boot. The system will then only boot
+       binaries signed with your keys.
+
+       To check status after reboot:
+         sbctl status
+      ============================================================
