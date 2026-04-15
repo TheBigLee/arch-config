@@ -1,0 +1,7 @@
+---
+# Role-level vars for the hyprland role.
+# hyprland_options defaults and hyprland_option_overrides live in
+# vars/packages.yml and host_vars/<hostname>.yml respectively.
+
+arch_hyprland_repo: "https://github.com/LinuxBeginnings/Arch-Hyprland.git"
+arch_hyprland_dir: "{{ ansible_env.HOME }}/Arch-Hyprland"

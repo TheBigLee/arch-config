@@ -1,0 +1,20 @@
+---
+# Host vars for Thor — desktop, Nvidia RTX 4080
+
+hostname: Thor
+timezone: Europe/Zurich
+
+extra_pacman_packages:
+  - nvidia-open          # RTX 4080 supported by open driver
+  - nvidia-utils
+  - lib32-nvidia-utils
+  - nvtop                # GPU process monitor
+
+extra_aur_packages: []
+
+extra_services_enable: []
+
+hyprland_option_overrides:
+  nvidia: "ON"
+  nouveau: "ON"   # Blacklist nouveau
+  bluetooth: "OFF"

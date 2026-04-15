@@ -1,0 +1,9 @@
+# Ansible inventory — one entry per machine.
+# Each machine runs the playbook locally against itself:
+#   ansible-playbook -i inventory setup.yml --limit $(hostname) --ask-become-pass
+
+[desktops]
+Thor     ansible_connection=local
+
+[laptops]
+Freya    ansible_connection=local

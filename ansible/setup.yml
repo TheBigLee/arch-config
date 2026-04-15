@@ -1,9 +1,8 @@
 ---
 # Main playbook for reproducible Arch Linux setup
-# Usage: ansible-playbook setup.yml --ask-become-pass
+# Usage: ansible-playbook -i inventory setup.yml --limit $(hostname) --ask-become-pass
 - name: Arch Linux system setup
-  hosts: localhost
-  connection: local
+  hosts: all
   become: false
 
   vars_files:
@@ -20,3 +19,4 @@
     - aur
     - services
     - hardware
+    - hyprland

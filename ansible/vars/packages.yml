@@ -1,6 +1,6 @@
 ---
-# System packages managed by pacman
-# Edit these lists to match your desired system state.
+# Shared package lists and defaults — applies to all machines.
+# Machine-specific additions go in host_vars/<hostname>.yml
 
 pacman_packages:
   # Base system
@@ -28,7 +28,7 @@ pacman_packages:
   - eza
   - jq
   - htop
-  - bottom
+  - btop
   - rsync
   - unzip
   - zip
@@ -45,10 +45,7 @@ pacman_packages:
   # Development
   - python
   - python-pip
-  - nodejs
-  - npm
   - go
-  - rustup
 
   # Security
   - gnupg
@@ -58,18 +55,44 @@ pacman_packages:
   - ansible
   - chezmoi
 
-aur_packages:
-  # Add AUR packages here (installed via paru)
-  # - paru           # AUR helper itself (bootstrapped separately)
-  # - 1password-cli
-  # - visual-studio-code-bin
+# Per-machine additions (override in host_vars/<hostname>.yml)
+extra_pacman_packages: []
+
+aur_packages: []
+
+# Per-machine AUR additions (override in host_vars/<hostname>.yml)
+extra_aur_packages: []
 
 systemd_services_enable:
   - NetworkManager
   - sshd
 
+# Per-machine service additions (override in host_vars/<hostname>.yml)
+extra_services_enable: []
+
 systemd_services_disable: []
 
 locale: en_US.UTF-8
-timezone: America/New_York   # Change to your timezone
-hostname: arch               # Change to your hostname
+
+# Default Hyprland installer options — override keys in host_vars/<hostname>.yml
+# via hyprland_option_overrides: { key: "ON/OFF" }
+hyprland_options:
+  sddm: "ON"
+  sddm_theme: "ON"
+  gtk_themes: "ON"
+  bluetooth: "OFF"
+  thunar: "ON"
+  quickshell: "OFF"
+  xdph: "ON"
+  zsh: "OFF"
+  pokemon: "OFF"
+  rog: "OFF"
+  dots: "ON"
+  input_group: "ON"
+  nvidia: "OFF"
+  nouveau: "OFF"
+
+# No default — must be set in host_vars/<hostname>.yml
+# hostname: ~
+# timezone: ~
+hyprland_option_overrides: {}

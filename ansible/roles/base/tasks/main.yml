@@ -5,7 +5,7 @@
 - name: Install pacman packages
   become: true
   community.general.pacman:
-    name: "{{ pacman_packages }}"
+    name: "{{ pacman_packages + extra_pacman_packages }}"
     state: present
 
 - name: Set hostname

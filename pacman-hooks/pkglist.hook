@@ -7,6 +7,6 @@ Target = *
 
 [Action]
 When = PostTransaction
-Exec = /bin/sh -c 'pacman -Qqe > /home/YOUR_USERNAME/dotfiles/pkglist.txt; pacman -Qqm > /home/YOUR_USERNAME/dotfiles/aur-pkglist.txt'
+Exec = /bin/sh -c 'pacman -Qqe > /home/bigli/dotfiles/pkglist.txt; pacman -Qqm > /home/bigli/dotfiles/aur-pkglist.txt'
 Description = Updating package lists in dotfiles...
 NeedsTargets

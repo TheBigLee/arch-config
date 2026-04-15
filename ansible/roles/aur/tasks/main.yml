@@ -10,8 +10,10 @@
   failed_when: paru_check.rc != 0
 
 - name: Install AUR packages via paru
-  when: aur_packages | length > 0
+  vars:
+    all_aur_packages: "{{ aur_packages + extra_aur_packages }}"
+  when: all_aur_packages | length > 0
   ansible.builtin.command:
-    argv: "{{ ['paru', '-S', '--needed', '--noconfirm'] + aur_packages }}"
+    argv: "{{ ['paru', '-S', '--needed', '--noconfirm'] + all_aur_packages }}"
   register: paru_result
   changed_when: "'installing' in paru_result.stdout | lower"

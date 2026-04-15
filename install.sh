@@ -3,7 +3,7 @@
 # Run on a fresh Arch install after base system configuration (locale, timezone, users, etc.)
 set -euo pipefail
 
-DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/YOUR_USERNAME/dotfiles.git}"
+DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/TheBigLee/dotfiles}"
 DOTFILES_DIR="$HOME/dotfiles"
 
 # Colors
@@ -58,9 +58,32 @@ clone_dotfiles() {
 }
 
 run_ansible() {
-    info "Running Ansible playbook..."
+    info "Running Ansible playbook for host: $(hostname)..."
     cd "$DOTFILES_DIR/ansible"
-    ansible-playbook setup.yml --ask-become-pass
+    ansible-playbook -i inventory setup.yml --limit "$(hostname)" --ask-become-pass
+}
+
+run_hyprland_installer() {
+    local hypr_dir="$HOME/Arch-Hyprland"
+    local preset="$hypr_dir/preset.conf"
+
+    if [[ ! -d "$hypr_dir" ]]; then
+        warn "Arch-Hyprland not found at $hypr_dir — Ansible hyprland role may have failed."
+        return 1
+    fi
+
+    echo
+    info "=== Arch-Hyprland interactive installer ==="
+    info "Preset written to: $preset"
+    info "The installer uses whiptail dialogs. When the options checklist appears,"
+    info "check the boxes that match the ON/OFF values in $preset"
+    echo
+    warn "Make sure you have run a full system update and rebooted before this step."
+    echo
+    read -rp "Press ENTER to launch the Arch-Hyprland installer, or Ctrl+C to skip..."
+
+    cd "$hypr_dir"
+    bash install.sh --preset preset.conf
 }
 
 apply_chezmoi() {
@@ -88,10 +111,11 @@ main() {
     install_pacman_hook
     run_ansible
     apply_chezmoi
+    run_hyprland_installer
 
     echo
     info "=== Bootstrap complete! ==="
-    info "Review any warnings above, then reboot."
+    info "Reboot to enter Hyprland via SDDM."
     warn "Remember to push updated pkglist.txt and aur-pkglist.txt to your repo."
 }
 

@@ -1,0 +1,29 @@
+---
+# Host vars for Freya — Lenovo ThinkPad X1
+
+hostname: Freya
+timezone: Europe/Zurich
+
+extra_pacman_packages:
+  - tlp                  # Power management
+  - tlp-rdw              # Radio device wizard (auto WiFi/BT on dock)
+  - acpi                 # Battery status
+  - powertop             # Power consumption monitor
+  - brightnessctl        # Backlight control
+  - intel-media-driver   # Hardware video decode (ThinkPad X1 uses Intel iGPU)
+  - vulkan-intel
+  - lib32-vulkan-intel
+  - mesa
+  - lib32-mesa
+
+extra_aur_packages:
+  - throttled            # Fix Intel CPU throttling on ThinkPad
+
+extra_services_enable:
+  - tlp.service          # Power management daemon
+  - bluetooth.service
+
+hyprland_option_overrides:
+  bluetooth: "ON"
+  nvidia: "OFF"
+  nouveau: "OFF"
