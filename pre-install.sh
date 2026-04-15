@@ -174,7 +174,7 @@ EOF
 
 # mkinitcpio hooks: systemd base, sd-encrypt unlocks LUKS, lvm2 provides binaries
 # (systemd activates the volume group automatically via udev rules)
-sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 filesystems fsck)/' \
+sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 filesystems)/' \
     /etc/mkinitcpio.conf
 
 # Configure mkinitcpio preset to produce Unified Kernel Images (UKIs)
@@ -230,14 +230,8 @@ When = PostTransaction
 Exec = /usr/bin/mkinitcpio -P
 EOF
 
-# Root password
-echo "--- Set root password ---"
-passwd
-
-# User
+# User (password set interactively outside chroot)
 useradd -mG wheel,audio,video,storage,optical,input "$USERNAME"
-echo "--- Set password for $USERNAME ---"
-passwd "$USERNAME"
 
 # Sudo for wheel group
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
@@ -256,6 +250,12 @@ fi
 echo ""
 echo "Chroot configuration complete."
 CHROOT
+
+info "Set root password:"
+arch-chroot /mnt passwd
+
+info "Set password for $USERNAME:"
+arch-chroot /mnt passwd "$USERNAME"
 
 # ------------------------------------------------------------------------------
 # Done
