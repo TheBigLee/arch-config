@@ -50,6 +50,13 @@
     name: "{{ ansible_user_id }}"
     shell: /usr/bin/zsh
 
+- name: Add user to docker group
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: true
+
 - name: Ensure /etc/sddm.conf.d directory exists
   become: true
   ansible.builtin.file:

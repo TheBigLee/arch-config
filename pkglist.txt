@@ -12,6 +12,8 @@ cava
 chezmoi
 claude-code
 cliphist
+direnv
+docker
 efibootmgr
 eza
 fastfetch
@@ -37,6 +39,7 @@ inxi
 jq
 kitty
 kubectl
+kubectx
 kvantum
 kvantum-qt5
 lib32-nvidia-utils
@@ -64,6 +67,7 @@ nvidia-utils
 nvtop
 nwg-displays
 nwg-look
+obsidian
 openssh
 otf-font-awesome
 pacman-contrib
@@ -98,6 +102,8 @@ starship
 sudo
 swappy
 swaync
+syncthing
+tailscale
 thunar
 thunar-archive-plugin
 thunar-volman
