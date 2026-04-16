@@ -203,6 +203,11 @@ EOF
 mkinitcpio -P
 
 # Register UEFI boot entries pointing directly to the UKIs (no bootloader)
+# Remove existing entries with matching labels to avoid duplicates
+while IFS= read -r bootnum; do
+    efibootmgr --delete-bootnum --bootnum "$bootnum"
+done < <(efibootmgr | grep -E '^\*?Boot[0-9A-F]{4}' | grep -E '"Arch Linux( \(fallback\))?"\s*$' | grep -oP '(?<=Boot)[0-9A-F]{4}')
+
 efibootmgr --create \
     --disk "$EFI_DISK" \
     --part "$EFI_PART_NUM" \
