@@ -179,7 +179,13 @@ EOF
 
 # mkinitcpio hooks: systemd base, sd-encrypt unlocks LUKS, lvm2 provides binaries
 # (systemd activates the volume group automatically via udev rules)
-sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 filesystems)/' \
+ROOT_FS=$(blkid -s TYPE -o value "/dev/mapper/${LVM_VG}-${LVM_ROOT_LV}")
+if [[ "$ROOT_FS" == "ext4" ]]; then
+    FSCK_HOOK=" fsck"
+else
+    FSCK_HOOK=""
+fi
+sed -i "s/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms block keyboard sd-vconsole sd-encrypt lvm2 filesystems${FSCK_HOOK})/" \
     /etc/mkinitcpio.conf
 
 # Configure mkinitcpio preset to produce Unified Kernel Images (UKIs)
