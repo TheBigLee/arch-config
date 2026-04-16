@@ -117,7 +117,8 @@ pacstrap -K /mnt \
     git \
     sudo \
     neovim \
-    zsh
+    zsh \
+    plymouth
 
 info "Setting up swap..."
 mkswap /dev/mapper/vg0-swap
@@ -174,7 +175,7 @@ printf '\n127.0.1.1\t%s\n' "$HOSTNAME" >> /etc/hosts
 # rd.luks.name=<uuid>=<name> identifies the device and sets the mapper name
 mkdir -p /etc/kernel
 cat > /etc/kernel/cmdline << EOF
-rd.luks.name=${LUKS_UUID}=${LUKS_MAPPER} root=/dev/mapper/${LVM_VG}-${LVM_ROOT_LV} rw quiet loglevel=3
+rd.luks.name=${LUKS_UUID}=${LUKS_MAPPER} root=/dev/mapper/${LVM_VG}-${LVM_ROOT_LV} rw quiet splash loglevel=3
 EOF
 
 # mkinitcpio hooks: systemd base, sd-encrypt unlocks LUKS, lvm2 provides binaries
@@ -185,7 +186,7 @@ if [[ "$ROOT_FS" == "ext4" ]]; then
 else
     FSCK_HOOK=""
 fi
-sed -i "s/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms block keyboard sd-vconsole sd-encrypt lvm2 filesystems${FSCK_HOOK})/" \
+sed -i "s/^HOOKS=.*/HOOKS=(base systemd plymouth autodetect microcode modconf kms block keyboard sd-vconsole sd-encrypt lvm2 filesystems${FSCK_HOOK})/" \
     /etc/mkinitcpio.conf
 
 # Configure mkinitcpio preset to produce Unified Kernel Images (UKIs)

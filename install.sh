@@ -58,9 +58,9 @@ clone_dotfiles() {
 }
 
 run_ansible() {
-    info "Running Ansible playbook for host: $(hostname)..."
+    info "Running Ansible playbook for host: $(cat /etc/hostname)..."
     cd "$DOTFILES_DIR/ansible"
-    ansible-playbook -i inventory setup.yml --limit "$(hostname)" --ask-become-pass
+    ansible-playbook -i inventory setup.yml --limit "$(cat /etc/hostname)" --ask-become-pass
 }
 
 run_hyprland_installer() {
