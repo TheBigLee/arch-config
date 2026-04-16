@@ -56,8 +56,8 @@ USERNAME="${USERNAME:-bigli}"
 TIMEZONE="${TIMEZONE:-Europe/Zurich}"
 LOCALE="${LOCALE:-en_US.UTF-8}"
 
-# Dotfiles repo — cloned for the new user so install.sh is ready after reboot
-DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/TheBigLee/arch-config.git}"
+# Config repo — cloned for the new user so install.sh is ready after reboot
+CONFIG_REPO="${CONFIG_REPO:-https://github.com/TheBigLee/arch-config.git}"
 
 # ==============================================================================
 
@@ -137,7 +137,7 @@ arch-chroot /mnt /bin/bash -s \
     "$HOSTNAME" "$USERNAME" "$TIMEZONE" "$LOCALE" \
     "$LUKS_UUID" "$LUKS_MAPPER" "$LVM_VG" "$LVM_ROOT_LV" \
     "$EFI_DISK" "$EFI_PART_NUM" \
-    "$DOTFILES_REPO" \
+    "$CONFIG_REPO" \
 << 'CHROOT'
 
 HOSTNAME="$1"
@@ -150,7 +150,7 @@ LVM_VG="$7"
 LVM_ROOT_LV="$8"
 EFI_DISK="$9"
 EFI_PART_NUM="${10}"
-DOTFILES_REPO="${11}"
+CONFIG_REPO="${11}"
 
 set -euo pipefail
 trap 'echo "[ERROR] chroot script failed at line $LINENO (exit $?)" >&2' ERR
@@ -250,18 +250,18 @@ EOF
 # User (password set interactively outside chroot)
 useradd -mG wheel,audio,video,storage,optical,input -s /usr/bin/zsh "$USERNAME"
 
-# Sudo for wheel group
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+# Passwordless sudo for wheel group
+sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
 # Services
 systemctl enable NetworkManager
 
-# Clone dotfiles so install.sh is ready after first reboot
-if [[ "$DOTFILES_REPO" != *"YOUR_USERNAME"* ]]; then
-    sudo -u "$USERNAME" git clone "$DOTFILES_REPO" "/home/${USERNAME}/dotfiles"
-    echo "Dotfiles cloned to /home/${USERNAME}/dotfiles — run ~/dotfiles/install.sh after reboot."
+# Clone config repo so install.sh is ready after first reboot
+if [[ "$CONFIG_REPO" != *"YOUR_USERNAME"* ]]; then
+    sudo -u "$USERNAME" git clone "$CONFIG_REPO" "/home/${USERNAME}/arch-config"
+    echo "Config repo cloned to /home/${USERNAME}/arch-config — run ~/arch-config/install.sh after reboot."
 else
-    echo "DOTFILES_REPO not configured — set it at the top of pre-install.sh."
+    echo "CONFIG_REPO not configured — set it at the top of pre-install.sh."
 fi
 
 echo ""
@@ -285,6 +285,6 @@ info "  umount -R /mnt && reboot"
 echo
 info "After booting into your new system:"
 info "  1. Log in as $USERNAME"
-info "  2. Run: ~/dotfiles/install.sh"
+info "  2. Run: ~/arch-config/install.sh"
 warn "Secure Boot is NOT yet active — enter UEFI setup and enable it after"
 warn "sbctl has enrolled your keys (done automatically by the Ansible secureboot role)."

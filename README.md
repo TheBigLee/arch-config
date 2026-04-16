@@ -1,4 +1,4 @@
-# dotfiles
+# Arch-config
 
 Reproducible Arch Linux setup for two machines:
 
@@ -71,7 +71,7 @@ umount -R /mnt && reboot
 ### 2. After first boot
 
 ```bash
-cd ~/dotfiles
+cd ~/arch-config
 bash install.sh
 ```
 
@@ -82,10 +82,10 @@ What it does, in order:
 | Install base deps | `pacman -S git base-devel ansible` |
 | Install paru | Builds from AUR if not present |
 | Install chezmoi | Via paru |
-| Clone dotfiles | Pulls this repo if not already present |
+| Clone config repo | Pulls this repo if not already present |
 | Install pacman hook | Auto-updates `pkglist.txt` / `aur-pkglist.txt` after every transaction |
 | Run Ansible | `ansible-playbook -i inventory setup.yml --limit $(hostname)` |
-| Apply chezmoi | `chezmoi init --source ~/dotfiles --apply` |
+| Apply chezmoi | `chezmoi init --apply <CHEZMOI_REPO>` |
 | Run Hyprland installer | Interactive — see note below |
 
 > **Hyprland installer note:** The [Arch-Hyprland](https://github.com/LinuxBeginnings/Arch-Hyprland)
@@ -178,7 +178,7 @@ is set based on hostname and can be used to template any managed file.
 Ansible is idempotent — safe to re-run any time to drift back to desired state:
 
 ```bash
-cd ~/dotfiles/ansible
+cd ~/arch-config/ansible
 ansible-playbook -i inventory setup.yml --limit "$(hostname)" --ask-become-pass
 ```
 
@@ -193,7 +193,7 @@ ansible-playbook -i inventory setup.yml --limit "$(hostname)" --tags services --
 ## Repository structure
 
 ```
-dotfiles/
+arch-config/
 ├── pre-install.sh              # Phase 1: pacstrap + chroot config (run from ISO)
 ├── install.sh                  # Phase 2: post-boot bootstrap
 ├── .chezmoi.toml.tmpl          # chezmoi machine config template

@@ -1,4 +1,13 @@
-# AUR packages — regenerated automatically by pacman hook
-# Restore: paru -S --needed - < aur-pkglist.txt
-#
-# To regenerate manually: pacman -Qqm > aur-pkglist.txt
+claude-code
+ferdium-bin
+gtk-engine-murrine
+gtk2
+paru
+paru-debug
+tree-sitter-cli-github-bin
+ttf-victor-mono
+wallust
+wlogout
+xfce-polkit
+zen-browser-bin
+zoom

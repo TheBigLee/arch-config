@@ -3,8 +3,9 @@
 # Run on a fresh Arch install after base system configuration (locale, timezone, users, etc.)
 set -euo pipefail
 
-DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/TheBigLee/dotfiles}"
-DOTFILES_DIR="$HOME/dotfiles"
+CONFIG_REPO="${CONFIG_REPO:-https://github.com/TheBigLee/arch-config}"
+CONFIG_DIR="$HOME/arch-config"
+CHEZMOI_REPO="${CHEZMOI_REPO:-https://github.com/TheBigLee/dot-chezmoi}"
 
 # Colors
 RED='\033[0;31m'
@@ -47,19 +48,19 @@ install_chezmoi() {
     paru -S --needed --noconfirm chezmoi
 }
 
-clone_dotfiles() {
-    if [[ -d "$DOTFILES_DIR/.git" ]]; then
-        info "Dotfiles repo already present at $DOTFILES_DIR, pulling latest..."
-        git -C "$DOTFILES_DIR" pull
+clone_config() {
+    if [[ -d "$CONFIG_DIR/.git" ]]; then
+        info "Config repo already present at $CONFIG_DIR, pulling latest..."
+        git -C "$CONFIG_DIR" pull
     else
-        info "Cloning dotfiles from $DOTFILES_REPO..."
-        git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+        info "Cloning config repo from $CONFIG_REPO..."
+        git clone "$CONFIG_REPO" "$CONFIG_DIR"
     fi
 }
 
 run_ansible() {
     info "Running Ansible playbook for host: $(cat /etc/hostname)..."
-    cd "$DOTFILES_DIR/ansible"
+    cd "$CONFIG_DIR/ansible"
     ansible-playbook -i inventory setup.yml --limit "$(cat /etc/hostname)" --ask-become-pass
 }
 
@@ -87,13 +88,13 @@ run_hyprland_installer() {
 }
 
 apply_chezmoi() {
-    info "Applying chezmoi dotfiles..."
-    chezmoi init --source "$DOTFILES_DIR" --apply
+    info "Applying chezmoi dotfiles from $CHEZMOI_REPO..."
+    chezmoi init --apply "$CHEZMOI_REPO"
 }
 
 install_pacman_hook() {
     info "Installing pacman hook for package list tracking..."
-    sudo install -Dm644 "$DOTFILES_DIR/pacman-hooks/pkglist.hook" \
+    sudo install -Dm644 "$CONFIG_DIR/pacman-hooks/pkglist.hook" \
         /etc/pacman.d/hooks/pkglist.hook
 }
 
@@ -101,13 +102,14 @@ main() {
     require_non_root
 
     info "=== Arch Linux reproducible setup bootstrap ==="
-    info "Dotfiles repo: $DOTFILES_REPO"
+    info "Config repo:  $CONFIG_REPO"
+    info "Chezmoi repo: $CHEZMOI_REPO"
     echo
 
     install_base_deps
     install_paru
     install_chezmoi
-    clone_dotfiles
+    clone_config
     install_pacman_hook
     run_ansible
     apply_chezmoi

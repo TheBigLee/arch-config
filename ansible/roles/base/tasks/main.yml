@@ -49,3 +49,23 @@
   ansible.builtin.user:
     name: "{{ ansible_user_id }}"
     shell: /usr/bin/zsh
+
+- name: Ensure /etc/sddm.conf.d directory exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/sddm.conf.d
+    state: directory
+    mode: '0755'
+
+- name: Configure SDDM autologin and keyboard layout
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/sddm.conf.d/autologin.conf
+    mode: '0644'
+    content: |
+      [Autologin]
+      User={{ ansible_user_id }}
+      Session=hyprland
+
+      [X11]
+      KeyboardLayout={{ keyboard_layout }}

@@ -73,6 +73,7 @@ extra_services_enable: []
 systemd_services_disable: []
 
 locale: en_US.UTF-8
+keyboard_layout: ch
 
 # Default Hyprland installer options — override keys in host_vars/<hostname>.yml
 # via hyprland_option_overrides: { key: "ON/OFF" }
