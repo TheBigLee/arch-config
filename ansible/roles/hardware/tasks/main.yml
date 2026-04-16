@@ -29,6 +29,18 @@
   register: gpu_info
   changed_when: false
 
+- name: Enable multilib repository
+  become: true
+  ansible.builtin.replace:
+    path: /etc/pacman.conf
+    regexp: '^#(\[multilib\])\n#(Include = /etc/pacman.d/mirrorlist)'
+    replace: '\1\n\2'
+
+- name: Refresh pacman databases
+  become: true
+  community.general.pacman:
+    update_cache: true
+
 - name: Install NVIDIA open drivers
   become: true
   community.general.pacman:
