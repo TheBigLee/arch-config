@@ -44,7 +44,7 @@ LUKS_PART="${LUKS_PART:-/dev/nvme0n1p2}"
 EFI_PART="${EFI_PART:-/dev/nvme0n1p1}"
 
 # The name you opened the LUKS container with
-LUKS_MAPPER="${LUKS_MAPPER:-cryptroot}"
+LUKS_MAPPER="${LUKS_MAPPER:-cryptlvm}"
 
 # LVM volume group and root logical volume names
 LVM_VG="${LVM_VG:-vg0}"
