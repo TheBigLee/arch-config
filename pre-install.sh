@@ -119,6 +119,10 @@ pacstrap -K /mnt \
     neovim \
     zsh
 
+info "Setting up swap..."
+mkswap /dev/mapper/vg0-swap
+swapon /dev/mapper/vg0-swap
+
 info "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
 
