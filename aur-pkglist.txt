@@ -1,7 +1,9 @@
 claude-code
+devpod-bin
 ferdium-bin
 gtk-engine-murrine
 gtk2
+jsonnet-language-server
 paru
 paru-debug
 tree-sitter-cli-github-bin

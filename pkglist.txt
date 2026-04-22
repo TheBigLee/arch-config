@@ -12,6 +12,7 @@ cava
 chezmoi
 claude-code
 cliphist
+devpod-bin
 direnv
 docker
 efibootmgr
@@ -37,6 +38,7 @@ hyprsunset
 imagemagick
 inxi
 jq
+jsonnet-language-server
 kitty
 kubectl
 kubectx
@@ -59,6 +61,7 @@ nano
 neovim
 network-manager-applet
 networkmanager
+nlohmann-json
 noto-fonts
 noto-fonts-emoji
 nvidia-open
