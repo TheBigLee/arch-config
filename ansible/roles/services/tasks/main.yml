@@ -8,7 +8,7 @@
     name: "{{ item }}"
     enabled: true
     state: started
-  loop: "{{ systemd_services_enable + extra_services_enable }}"
+  loop: "{{ systemd_services_enable + (extra_services_enable | default([])) }}"
 
 - name: Disable systemd services
   become: true

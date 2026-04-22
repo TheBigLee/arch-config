@@ -15,6 +15,7 @@ extra_pacman_packages:
   - lib32-vulkan-intel
   - mesa
   - lib32-mesa
+  - sof-firmware             # Audio firmware for ThinkPad X1
 
 extra_aur_packages:
   - throttled            # Fix Intel CPU throttling on ThinkPad

@@ -32,6 +32,12 @@ pacman_packages:
   - rsync
   - unzip
   - zip
+  - bc
+  - direnv
+  - go-yq
+  - lazygit
+  - zoxide
+  - zellij
 
   # Networking
   - networkmanager
@@ -48,31 +54,48 @@ pacman_packages:
   - python-pip
   - go
   - docker
+  - docker-buildx
+  - helm
+  - kubectl
+  - kubectx
+  - krew
+  - opentofu
+  - pre-commit
 
   # Security
   - gnupg
   - pass
+  - sops
+  - gitleaks
 
   # Misc
   - ansible
   - chezmoi
+  - github-cli
+  - kitty
+  - obsidian
+  - pwgen
+  - syncthing
+  - thunderbird
 
-# Per-machine additions (override in host_vars/<hostname>.yml)
-extra_pacman_packages: []
-
-aur_packages: []
-
-# Per-machine AUR additions (override in host_vars/<hostname>.yml)
-extra_aur_packages: []
+aur_packages:
+  - 1password
+  - 1password-cli
+  - claude-code
+  - devpod-bin
+  - jsonnet-language-server
+  - ferdium-bin
+  - jai
+  - kubecolor
+  - tofi
+  - zen-browser-bin
+  - zoom
 
 systemd_services_enable:
   - NetworkManager
   - sshd
   - tailscaled
   - docker
-
-# Per-machine service additions (override in host_vars/<hostname>.yml)
-extra_services_enable: []
 
 systemd_services_disable: []
 

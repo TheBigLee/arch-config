@@ -11,7 +11,7 @@
 
 - name: Install AUR packages via paru
   vars:
-    all_aur_packages: "{{ aur_packages + extra_aur_packages }}"
+    all_aur_packages: "{{ aur_packages + (extra_aur_packages | default([])) }}"
   when: all_aur_packages | length > 0
   ansible.builtin.command:
     argv: "{{ ['paru', '-S', '--needed', '--noconfirm'] + all_aur_packages }}"
