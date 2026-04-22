@@ -97,6 +97,8 @@ hyprland_options:
   nvidia: "OFF"
   nouveau: "OFF"
 
+chezmoi_repo: https://github.com/TheBigLee/dot-chezmoi
+
 # No default — must be set in host_vars/<hostname>.yml
 # hostname: ~
 # timezone: ~

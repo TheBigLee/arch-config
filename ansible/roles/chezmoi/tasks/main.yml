@@ -1,0 +1,5 @@
+---
+- name: Initialize chezmoi with dotfiles repo
+  ansible.builtin.command:
+    cmd: chezmoi init --apply {{ chezmoi_repo }}
+    creates: "{{ ansible_env.HOME }}/.local/share/chezmoi"
