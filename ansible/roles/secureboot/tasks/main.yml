@@ -16,15 +16,17 @@
     name: sbctl
     state: present
 
-- name: Check if Secure Boot keys already exist
-  ansible.builtin.stat:
-    path: /usr/share/secureboot/keys/db/db.key
-  register: sb_keys
+- name: Check Secure Boot setup mode status
+  become: true
+  ansible.builtin.command: sbctl status
+  register: sbctl_status
+  changed_when: false
+  failed_when: false
 
 - name: Create Secure Boot keys
   become: true
   ansible.builtin.command: sbctl create-keys
-  when: not sb_keys.stat.exists
+  when: "'Setup Mode:\tEnabled' in sbctl_status.stdout"
   changed_when: true
 
 # --microsoft enrolls the Microsoft 3rd-party UEFI CA alongside your own keys.
@@ -33,12 +35,8 @@
 - name: Enroll Secure Boot keys (with Microsoft CA for hardware compatibility)
   become: true
   ansible.builtin.command: sbctl enroll-keys --microsoft
-  register: enroll_result
-  # sbctl exits non-zero if keys are already enrolled — treat as OK
-  failed_when:
-    - enroll_result.rc != 0
-    - "'already enrolled' not in enroll_result.stderr"
-  changed_when: enroll_result.rc == 0
+  when: "'Setup Mode:\tEnabled' in sbctl_status.stdout"
+  changed_when: true
 
 - name: Find UKIs to sign
   ansible.builtin.find:

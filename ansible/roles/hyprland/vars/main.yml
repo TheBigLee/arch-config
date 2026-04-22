@@ -4,4 +4,4 @@
 # vars/packages.yml and host_vars/<hostname>.yml respectively.
 
 arch_hyprland_repo: "https://github.com/LinuxBeginnings/Arch-Hyprland.git"
-arch_hyprland_dir: "{{ ansible_env.HOME }}/Arch-Hyprland"
+arch_hyprland_dir: "{{ ansible_facts['env']['HOME'] }}/Arch-Hyprland"
