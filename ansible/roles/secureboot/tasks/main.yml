@@ -29,6 +29,24 @@
   when: "'Setup Mode:\tEnabled' in sbctl_status.stdout"
   changed_when: true
 
+# EFI vars for KEK and db are immutable by default; must remove immutable flag before enrolling.
+- name: Find immutable efivars that block key enrollment
+  become: true
+  ansible.builtin.find:
+    paths: /sys/firmware/efi/efivars
+    patterns: "KEK-*,db-*"
+    file_type: any
+  register: efi_vars
+
+- name: Remove immutable flag from efivars
+  become: true
+  ansible.builtin.command: "chattr -i {{ item.path }}"
+  loop: "{{ efi_vars.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  changed_when: true
+  failed_when: false
+
 # --microsoft enrolls the Microsoft 3rd-party UEFI CA alongside your own keys.
 # This keeps hardware firmware (NIC, GPU option ROMs, etc.) working.
 # Omit --microsoft only if you are certain your hardware needs no Microsoft-signed firmware.
