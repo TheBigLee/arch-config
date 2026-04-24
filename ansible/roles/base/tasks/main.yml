@@ -57,6 +57,23 @@
     groups: docker
     append: true
 
+- name: Ensure /etc/docker directory exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/docker
+    state: directory
+    mode: '0755'
+
+- name: Configure Docker daemon
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    mode: '0644'
+    content: |
+      {
+        "iptables": true
+      }
+
 - name: Ensure /etc/sddm.conf.d directory exists
   become: true
   ansible.builtin.file:
