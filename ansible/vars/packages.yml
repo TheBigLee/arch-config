@@ -84,6 +84,8 @@ aur_packages:
   - claude-code
   - devpod-bin
   - jsonnet-language-server
+  - vscode-json-languageserver
+  - yaml-language-server
   - ferdium-bin
   - jai
   - kubecolor
