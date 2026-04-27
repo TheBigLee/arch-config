@@ -59,6 +59,7 @@ pacman_packages:
   - python
   - python-pip
   - go
+  - delve
   - docker
   - docker-buildx
   - helm
