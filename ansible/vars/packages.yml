@@ -20,6 +20,12 @@ pacman_packages:
   # Editors
   - neovim
 
+  # Language servers
+  - lua-language-server
+  - gopls
+  - bash-language-server
+  - marksman
+
   # CLI tools
   - fzf
   - ripgrep
@@ -61,6 +67,7 @@ pacman_packages:
   - krew
   - opentofu
   - pre-commit
+  - python-cookiecutter
 
   # Security
   - gnupg
