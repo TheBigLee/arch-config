@@ -82,7 +82,9 @@ pacman_packages:
   - github-cli
   - kitty
   - obsidian
+  - ollama
   - pwgen
+  - steam
   - syncthing
   - thunderbird
 
@@ -91,9 +93,12 @@ aur_packages:
   - 1password-cli
   - claude-code
   - devpod-bin
+  - opencode
+  - openshift-client-bin
   - jsonnet-language-server
   - vscode-json-languageserver
   - yaml-language-server
+  - yamlfmt
   - ferdium-bin
   - jai
   - kubecolor
