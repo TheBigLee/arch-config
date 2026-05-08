@@ -10,7 +10,8 @@ extra_pacman_packages:
   - lib32-nvidia-utils
   - nvtop                # GPU process monitor
 
-extra_aur_packages: []
+extra_aur_packages:
+  - unifi
 
 extra_services_enable: []
 
